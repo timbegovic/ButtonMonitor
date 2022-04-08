@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2022-02-09T10:16:35
+# Project created by QtCreator 2022-05-09T12:38:45
 #
 #-------------------------------------------------
 
@@ -35,6 +35,7 @@ HEADERS += \
     config.h
 
 LIBS += -llgpio
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -5,15 +5,14 @@
 
 #include <QList>
 
-// Raspberry Hat BULME
-const QList<int> LEDS = {18, 23, 24, 25}; // Output pins
-const QList<int> BUTTONS = {22, 27, 17}; // Input pins
 
-// Chip configuration Raspberry specific
+const QList<int> LEDS = { 18, 23, 24, 25 }; // Output
+const QList<int> BUTTONS = { 22, 27, 17 }; // Input
+
+
 const int LFLAGS = 0;
 const int CHIP = 0;
 
-// Update interval for reading pin state
-const int T_UPDATE = 200; //  ms
+const int T_UPDATE = 75;
 
-#endif // CONFIG_H
+#endif

@@ -11,7 +11,10 @@ gpio::gpio(QObject *parent) : QObject(parent)
     for (auto pin : LEDS) // Outputs
         lgGpioClaimOutput(m_handle, LFLAGS, pin, init_level);
     for (auto pin : BUTTONS) // Inputs
+    {
         lgGpioClaimInput(m_handle, LFLAGS, pin);
+        m_oldStates.push_back((bool)lgGpioRead(m_handle, pin)); // ensures proper edge-detection from point of initialization on
+    }
 }
 
 gpio::~gpio()
@@ -35,14 +38,39 @@ void gpio::set(unsigned int pattern)
     int n = 0;
     int value = 0;
     for (auto pin: LEDS) {
-       // n-te Stelle vom pattern ausmaskieren, value =
+
        lgGpioWrite(m_handle, pin, value);
-       // Maske um 1 Stelle nach vorne verschieben
+
     }
 }
 
-// Read pin state
-bool gpio::get(int pin)
+bool gpio::get(int pin, getMode mode)
 {
-    return lgGpioRead(m_handle, pin);
+    unsigned int idx = BUTTONS.indexOf(pin);
+
+    bool pinState = lgGpioRead(m_handle, pin);
+    bool out = pinState;
+
+    switch(mode)
+    {
+
+    case getMode::falling:
+    {
+        out = (m_oldStates[idx] && !pinState);  // ⁻⁻\__
+        m_oldStates[idx] = pinState;
+        break;
+    }
+
+    case getMode::rising:
+    {
+        out = (!m_oldStates[idx] && pinState);  // __/⁻⁻
+        m_oldStates[idx] = pinState;
+        break;
+    }
+
+    default: break;
+
+    }
+
+    return out;
 }
